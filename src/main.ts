@@ -1,6 +1,9 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { JwtAuthGuard } from './features/auth/guard/jwt-auth.guard';
+import { RolesGuard } from './features/auth/guard/roles.guard';
+import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -23,6 +26,15 @@ async function bootstrap() {
       forbidUnknownValues: true,
     }),
   );
+
+  // global auth
+  const reflector = app.get(Reflector);
+  app.useGlobalGuards(new JwtAuthGuard(reflector));
+
+  // roles guard
+  app.useGlobalGuards(new RolesGuard(reflector));
+
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   await app.listen(3000);
 }
