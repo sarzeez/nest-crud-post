@@ -3,6 +3,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostModule } from './features/post/module/post.module';
+import { AuthModule } from './features/auth/module/auth.module';
+import { UserModule } from './features/user/module/user.module';
 
 @Module({
   imports: [
@@ -11,6 +13,8 @@ import { PostModule } from './features/post/module/post.module';
       ...dataSourceOptions,
     }),
     PostModule,
+    AuthModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],
